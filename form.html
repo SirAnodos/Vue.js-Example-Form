@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src ="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div id="personal-form">
+        <form>
+            <label>First Name:<br>
+            <input v-model="fname" @change="saveData('fname', fname)" type="text" name="fname"><br></label>
+            <label>Last Name:<br>
+            <input v-model="lname" @change="saveData('lname', lname)" type="text" name="lname"><br></label>
+            <label>Date of Birth:<br>
+            <input v-model="dob" @change="saveData('dob', dob)" type="date" name="dob"><br></label>
+            <label>Sex:<br>
+            <select v-model="sex" @change="toggleSex()" name="sex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select><br></label>
+            <div v-if="sex=='female'">
+                <label>Are you currently pregnant, or do you have children under 18?:<br>
+                <select v-model="children" @change="saveData('children', children)" name="children" selected="no">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select><br></label>
+            </div>
+            <div v-if="sex=='male'">
+                <label>Are you a combat veteran?:<br>
+                <select v-model="veteran" @change="saveData('veteran', veteran)" name="veteran" selected="no">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select><br></label>
+            </div>
+            <label>Do you have work experience?<br>
+            <select v-model="exp" @change="toggleExp()" name="exp" selected="no">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select><br></label>
+            <div v-if="exp=='yes'">
+                <div v-for="job in jobs">
+                    <label>Company:<br>
+                    <input v-model="job.company" @change="saveData('jobs', JSON.stringify(jobs))" type="text">
+                    <br></label>
+                    <label>Job Title:<br>
+                    <input v-model="job.title" @change="saveData('jobs', JSON.stringify(jobs))" type="text">
+                    <br></label>
+                    <label>Years:<br>
+                    <input v-model="job.years" @change="saveData('jobs', JSON.stringify(jobs))" type="number">
+                    <br></label>
+                    <input type="button" @click="removeJob(job)" value="Remove"><br>
+                </div>
+                <input type="button" @click="addJob()" value="Add Experience"><br>
+            </div>
+        </form>
+    </div>
+
+<script>
+    const personalFormApp = Vue.createApp({
+        data() {
+            return {
+                fname: null,
+                lname: null,
+                dob: null,
+                sex: null,
+                children: null,
+                veteran: null,
+                exp: null,
+                jobs: null,
+            };
+        },
+        mounted() {
+            this.fetchData();
+        },
+        methods: {
+            fetchData() {
+                $.ajax({
+                    url: './cookies.php',
+                    method: 'GET',
+                    success: (result) => {
+                        attributes = JSON.parse(result);
+                        attributes.jobs = JSON.parse(attributes.jobs);
+                        this.fname = attributes.fname;
+                        this.lname = attributes.lname;
+                        this.dob = attributes.dob;
+                        this.sex = attributes.sex;
+                        this.children = attributes.children;
+                        this.veteran = attributes.veteran;
+                        this.exp = attributes.exp;
+                        this.jobs = attributes.jobs;
+                    },
+                })
+
+            },
+            saveData(attribute, data) {
+                $.ajax({
+                    url: './cookies.php?' + attribute + '=' + data,
+                    method: 'GET',
+                })
+            },
+            toggleSex() {
+                if (this.sex == 'male') {
+                    this.children = null;
+                } else {
+                    this.veteran = null;
+                }
+                this.saveData('sex', this.sex);
+                this.saveData('children', this.children);
+                this.saveData('veteran', this.veteran);
+            },
+            toggleExp() {
+                if (this.exp == 'yes') {
+                    this.jobs = [{ company:'', title:'', years:0, }];
+                } else {
+                    this.jobs = [];
+                }
+                this.saveData('exp', this.exp);
+                this.saveData('jobs', JSON.stringify(this.jobs));
+            },
+            addJob() {
+                if (this.jobs.length < 5) {
+                    this.jobs.push({ company:null, title:null, years:null, });
+                }
+                this.saveData('jobs', JSON.stringify(this.jobs));
+            },
+            removeJob(job) {
+                this.jobs.splice(this.jobs.indexOf(job), 1);
+            }
+        },
+    })
+    personalFormApp.mount('#personal-form')
+</script>
+
+</body>
+</html>
