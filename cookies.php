@@ -6,11 +6,10 @@ $attributes = ['fname' => null, 'lname' => null, 'dob' => null, 'sex' => null,
 if ($_GET['action'] == 'save') {
     foreach ($_POST as $attribute => $value) {
         if (array_key_exists($attribute, $attributes)) { // only set cookie if the name is valid
-            setcookie($attribute, $value);
             if ($value == 'null' || $value == '') {
                 setcookie($attribute, '', time()-1000);
             } else {
-                setcookie($attribute, $value);
+                setcookie($attribute, $value, time() + (30 * 24 * 60 * 60));
             }
         }
     }
