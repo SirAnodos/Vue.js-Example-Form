@@ -77,8 +77,8 @@
         methods: {
             fetchData() {
                 $.ajax({
-                    url: './cookies.php',
-                    method: 'GET',
+                    url: './cookies.php?action=load',
+                    method: 'POST',
                     success: (result) => {
                         attributes = JSON.parse(result);
                         attributes.jobs = JSON.parse(attributes.jobs);
@@ -94,11 +94,12 @@
                 })
 
             },
-            saveData(attribute, data) {
+            saveData(attribute, value) {
                 $.ajax({
-                    url: './cookies.php?' + attribute + '=' + data,
-                    method: 'GET',
-                })
+                    url: './cookies.php?action=save',
+                    method: 'POST',
+                    data: {[attribute]: value},
+                });
             },
             toggleSex() {
                 if (this.sex == 'male') {
@@ -127,6 +128,7 @@
             },
             removeJob(job) {
                 this.jobs.splice(this.jobs.indexOf(job), 1);
+                this.saveData('jobs', JSON.stringify(this.jobs));
             }
         },
     })
