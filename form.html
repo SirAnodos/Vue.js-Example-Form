@@ -2,57 +2,67 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Personal Data Entry Form</title>
+
     <script src ="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-    <div id="personal-form">
+    <div id="personal-form" class="personal-form">
         <form>
-            <label>First Name:<br>
-            <input v-model="fname" @change="saveData('fname', fname)" type="text" name="fname"><br></label>
-            <label>Last Name:<br>
-            <input v-model="lname" @change="saveData('lname', lname)" type="text" name="lname"><br></label>
-            <label>Date of Birth:<br>
-            <input v-model="dob" @change="saveData('dob', dob)" type="date" name="dob"><br></label>
-            <label>Sex:<br>
-            <select v-model="sex" @change="toggleSex()" name="sex">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-            </select><br></label>
-            <div v-if="sex=='female'">
-                <label>Are you currently pregnant, or do you have children under 18?:<br>
-                <select v-model="children" @change="saveData('children', children)" name="children" selected="no">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+            <div class="section">
+                <h4>Personal Info:</h4>
+                <label>First Name:<br>
+                <input v-model="fname" @change="saveData('fname', fname)" type="text" name="fname"><br></label>
+                <label>Last Name:<br>
+                <input v-model="lname" @change="saveData('lname', lname)" type="text" name="lname"><br></label>
+                <label>Date of Birth:<br>
+                <input v-model="dob" @change="saveData('dob', dob)" type="date" name="dob"><br></label>
+                <label>Sex:<br>
+                <select v-model="sex" @change="toggleSex()" name="sex">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
                 </select><br></label>
-            </div>
-            <div v-if="sex=='male'">
-                <label>Are you a combat veteran?:<br>
-                <select v-model="veteran" @change="saveData('veteran', veteran)" name="veteran" selected="no">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select><br></label>
-            </div>
-            <label>Do you have work experience?<br>
-            <select v-model="exp" @change="toggleExp()" name="exp" selected="no">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select><br></label>
-            <div v-if="exp=='yes'">
-                <div v-for="job in jobs">
-                    <label>Company:<br>
-                    <input v-model="job.company" @change="saveData('jobs', JSON.stringify(jobs))" type="text">
-                    <br></label>
-                    <label>Job Title:<br>
-                    <input v-model="job.title" @change="saveData('jobs', JSON.stringify(jobs))" type="text">
-                    <br></label>
-                    <label>Years:<br>
-                    <input v-model="job.years" @change="saveData('jobs', JSON.stringify(jobs))" type="number">
-                    <br></label>
-                    <input type="button" @click="removeJob(job)" value="Remove"><br>
+                <div v-if="sex=='female'">
+                    <label>Are you currently pregnant, or do you have children under 18?:<br>
+                    <select v-model="children" @change="saveData('children', children)" name="children" selected="no">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select><br></label>
                 </div>
-                <input type="button" @click="addJob()" value="Add Experience"><br>
+                <div v-if="sex=='male'">
+                    <label>Are you a combat veteran?:<br>
+                    <select v-model="veteran" @change="saveData('veteran', veteran)" name="veteran" selected="no">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select><br></label>
+                </div>
+            </div>
+            <div class="section">
+                <h4>Work Experience:</h4>
+                <label>Do you have work experience?<br>
+                <select v-model="exp" @change="toggleExp()" name="exp" selected="no">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select><br></label>
+                <div v-if="exp=='yes'">
+                    <div v-for="job in jobs" class="job">
+                        <label>Company:<br>
+                        <input v-model="job.company" @change="saveData('jobs', JSON.stringify(jobs))" type="text">
+                        <br></label>
+                        <label>Job Title:<br>
+                        <input v-model="job.title" @change="saveData('jobs', JSON.stringify(jobs))" type="text">
+                        <br></label>
+                        <label>Years:
+                        <input v-model="job.years" @change="saveData('jobs', JSON.stringify(jobs))" type="number" style="width: 20%;">
+                        </label><br>
+                        <input type="button" @click="removeJob(job)" value="Remove">
+                    </div>
+                    <input type="button" @click="addJob()" value="Add Experience"><br>
+                </div>
             </div>
         </form>
     </div>
@@ -128,6 +138,9 @@
             },
             removeJob(job) {
                 this.jobs.splice(this.jobs.indexOf(job), 1);
+                if (this.jobs.length <= 0) {
+                    this.exp = 'no';
+                }
                 this.saveData('jobs', JSON.stringify(this.jobs));
             }
         },

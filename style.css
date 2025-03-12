@@ -1,0 +1,41 @@
+.section {
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.job {
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.job label {
+    width: calc(100%);
+    margin: 0px, 20px;
+}
+
+.job label input {
+    width: calc(100% - 10px);
+    margin: 0px;
+}
+
+.job label:last-of-type {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.job input:last-child {
+    width: 40%;
+    margin: 5px;
+    align-self: flex-end;
+}
+
+.personal-form {
+    width: 200px;
+}
