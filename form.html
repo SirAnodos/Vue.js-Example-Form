@@ -15,12 +15,12 @@
         <form>
             <div class="section">
                 <h4>Personal Info:</h4>
-                <label>First Name:<br>
-                <input v-model="fname" @change="saveData('fname', fname)" type="text" name="fname"><br></label>
-                <label>Last Name:<br>
-                <input v-model="lname" @change="saveData('lname', lname)" type="text" name="lname"><br></label>
+                <label class="name">First Name:<br>
+                <input v-model="fname" @change="saveData('fname', fname)" type="text" name="fname"></label>
+                <label class="name">Last Name:<br>
+                <input v-model="lname" @change="saveData('lname', lname)" type="text" name="lname"></label><br>
                 <label>Date of Birth:<br>
-                <input v-model="dob" @change="saveData('dob', dob)" type="date" name="dob"><br></label>
+                <input v-model="dob" @change="saveData('dob', dob)" type="date" name="dob"></label><br>
                 <label>Sex:<br>
                 <select v-model="sex" @change="toggleSex()" name="sex">
                     <option value="male">Male</option>
